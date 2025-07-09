@@ -1,324 +1,284 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <!-- فونت Vazir -->
-    <link href="https://cdn.fontcdn.ir/Fonts/Vazir/Vazir.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Vazir', 'Arial', sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .container {
-            max-width: 900px;
-            width: 100%;
-        }
-        .card {
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            padding: 20px;
-            background-color: #fff;
-        }
-        .btn-primary, .btn-secondary {
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-size: 1rem;
-        }
-        .table-responsive {
-            overflow-x: auto;
-        }
-        .table {
-            direction: rtl;
-            text-align: right;
-            font-size: 0.9rem;
-            width: 100%;
-            table-layout: auto;
-        }
-        .table th, .table td {
-            word-wrap: break-word;
-            max-width: 200px;
-        }
-        .copy-btn {
-            cursor: pointer;
-            color: #007bff;
-            font-weight: bold;
-        }
-        .ping-text {
-            font-size: 0.7rem;
-            color: #6c757d;
-        }
-        .ping-value {
-            font-weight: bold;
-        }
-        .ping-green {
-            color: #28a745;
-        }
-        .ping-yellow {
-            color: #ffc107;
-        }
-        .ping-red {
-            color: #dc3545;
-        }
-        .form-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-        .button-group {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            .btn-primary, .btn-secondary {
-                font-size: 0.9rem;
-                padding: 8px 16px;
-            }
-            .table {
-                font-size: 0.8rem;
-            }
-        }
-        @media (max-width: 576px) {
-            .form-container {
-                flex-direction: column;
-            }
-            .button-group {
-                flex-direction: column;
-                width: 100%;
-            }
-            .btn-primary, .btn-secondary {
-                width: 100%;
-            }
-            .table {
-                font-size: 0.75rem;
-            }
-            .table th, .table td {
-                max-width: 150px;
-            }
-            .table-responsive {
-                -webkit-overflow-scrolling: touch;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CMD DNS Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #808080;
+    }
+    .login-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 0.5s ease-in;
+    }
+    .login-box {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      animation: slideUp 0.5s ease-out;
+    }
+    .login-box h2 {
+      color: #ffffff;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-size: 16px;
+      text-align: center;
+    }
+    .login-box input::placeholder {
+      color: #ccc;
+    }
+    .login-box button {
+      background: #ffffff;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      color: #000;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .login-box button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+    }
+    .main-panel {
+      display: none;
+      width: 90%;
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 0.5s ease-in;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      margin-bottom: 20px;
+    }
+    header h1 {
+      font-size: 28px;
+      color: #ffffff;
+    }
+    .section-title {
+      font-size: 20px;
+      color: #ffffff;
+      margin-bottom: 15px;
+    }
+    select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-size: 16px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    select:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    .btn {
+      background: #ffffff;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      color: #000;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      width: 100%;
+      margin-top: 15px;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+    }
+    .dns-box {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
+    }
+    .dns-ip {
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      font-family: monospace;
+      cursor: pointer;
+      transition: background 0.3s;
+      color: #ffffff;
+    }
+    .dns-ip:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .copy-message {
+      display: none;
+      color: #ffffff;
+      margin-top: 8px;
+    }
+    .support-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 12px 24px;
+      border-radius: 20px;
+      margin: 20px auto;
+      width: fit-content;
+      text-decoration: none;
+      color: #ffffff;
+      font-size: 16px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .support-btn img {
+      width: 24px;
+      height: 24px;
+    }
+    .support-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-center my-4">تولیدکننده DNS تصادفی</h1>
-        <div class="card">
-            <div class="form-container">
-                <div class="row w-100 g-3">
-                    <div class="col-md-6">
-                        <label for="regionSelect" class="form-label">منطقه:</label>
-                        <select id="regionSelect" class="form-select">
-                            <option value="iran">ایران</option>
-                            <option value="europe">اروپا</option>
-                            <option value="middle_east">خاورمیانه</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="ipType" class="form-label">نوع IP:</label>
-                        <select id="ipType" class="form-select">
-                            <option value="ipv4">IPv4</option>
-                            <option value="ipv6">IPv6</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="button-group">
-                    <button class="btn btn-primary" onclick="generateDNS()">تولید DNS</button>
-                    <button class="btn btn-secondary" onclick="fetchPublicDNS()">دریافت DNS عمومی</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="card mt-4">
-            <h3 class="text-center">آدرس‌های تولیدشده</h3>
-            <div class="table-responsive">
-                <table class="table table-striped" id="dnsTable">
-                    <thead>
-                        <tr>
-                            <th>نوع</th>
-                            <th>منطقه</th>
-                            <th>آدرس DNS<br><span class="ping-text">پینگ (ms)</span></th>
-                            <th>کشور</th>
-                            <th>عملیات</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dnsTableBody"></tbody>
-                </table>
-            </div>
-        </div>
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <h2>ورود</h2>
+      <input type="text" id="usernameInput" placeholder="نام کاربری" />
+      <input type="password" id="passwordInput" placeholder="رمز عبور" />
+      <button onclick="checkLogin()">ورود</button>
     </div>
+  </div>
 
-    <!-- Bootstrap JS and Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script>
-        // رنج‌های IP برای ایران، اروپا و خاورمیانه
-        const ipRanges = {
-            iran: {
-                ipv4: ['2.185.239.0/24', '78.39.0.0/16', '185.88.0.0/16'], // رنج‌های ایران
-                ipv6: ['2001:db8::/32', '2a0d:5a80::/29']
-            },
-            europe: {
-                ipv4: ['31.0.0.0/8', '46.0.0.0/8', '5.0.0.0/8'],
-                ipv6: ['2a00::/12', '2a01::/16', '2a02::/16']
-            },
-            middle_east: {
-                ipv4: ['185.0.0.0/8', '37.0.0.0/8', '77.0.0.0/8'],
-                ipv6: ['2c0f::/32', '2001:678::/29']
-            }
-        };
+  <div class="main-panel" id="mainPanel">
+    <header>
+      <h1>CMD DNS PANEL</h1>
+    </header>
+    <div class="section">
+      <div class="section-title">انتخاب هاست</div>
+      <select id="hostSelect">
+        <option value="" disabled selected>هاست را انتخاب کنید</option>
+        <option value="jeddah-gaming-05.sa">Jeddah</option>
+        <option value="saudi-gameserver-02.sa">Saudi</option>
+      </select>
+    </div>
+    <div class="section">
+      <div class="section-title">تولید DNS</div>
+      <button class="btn" id="generateDns" disabled>تولید DNS</button>
+      <div class="dns-box" id="dnsResult">
+        <p>DNS: <span id="selectedHostName"></span></p>
+        <div class="dns-ip" id="dnsIp"></div>
+        <div class="copy-message" id="copyMessage">کپی شد!</div>
+      </div>
+    </div>
+    <a href="https://t.me/cnn399" class="support-btn">
+      <img src="https://i.ibb.co/4RQjnVqf/New-Project-25-91-E6-BC0.png" alt="Telegram">
+      پشتیبانی
+    </a>
+  </div>
 
-        // لیست DNSهای پیش‌فرض (مناسب گیمینگ)
-        const fallbackDNS = [
-            { address: '1.1.1.1', region: 'جهانی/گیمینگ', type: 'IPv4', country: 'جهانی' },
-            { address: '8.8.8.8', region: 'جهانی/گیمینگ', type: 'IPv4', country: 'جهانی' },
-            { address: '9.9.9.9', region: 'جهانی/گیمینگ', type: 'IPv4', country: 'جهانی' }
-        ];
+  <script>
+    // اعتبارسنجی لاگین
+    function checkLogin() {
+      const username = document.getElementById('usernameInput').value;
+      const password = document.getElementById('passwordInput').value;
+      if (username === 'cmd_22' && password === 'cmd_11') {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainPanel').style.display = 'block';
+      } else {
+        alert('نام کاربری یا رمز عبور اشتباه است');
+      }
+    }
 
-        // تولید آدرس IPv4 تصادفی
-        function generateRandomIPv4(range) {
-            const [base] = range.split('/');
-            const parts = base.split('.');
-            return `${parts[0]}.${parts[1] || Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`;
-        }
+    // انتخاب هاست و تولید DNS
+    const hostSelect = document.getElementById('hostSelect');
+    const generateBtn = document.getElementById('generateDns');
+    const dnsBox = document.getElementById('dnsResult');
+    const dnsIp = document.getElementById('dnsIp');
+    const copyMsg = document.getElementById('copyMessage');
+    const generatedIps = new Set();
 
-        // تولید آدرس IPv6 تصادفی (تا 5 بخش)
-        function generateRandomIPv6(prefix) {
-            const sections = Array(5).fill().map(() => Math.floor(Math.random() * 65536).toString(16));
-            return `${prefix}:${sections.join(':')}::`;
-        }
+    hostSelect.addEventListener('change', () => {
+      const selectedHost = hostSelect.value;
+      document.getElementById('selectedHostName').textContent = selectedHost;
+      generateBtn.disabled = !selectedHost;
+    });
 
-        // تولید پینگ تصادفی
-        function generateRandomPing() {
-            return Math.floor(Math.random() * (255 - 20 + 1)) + 20;
-        }
+    generateBtn.addEventListener('click', () => {
+      const selectedHost = hostSelect.value;
+      if (!selectedHost) return;
+      let ip;
+      do {
+        ip = Array.from({ length: 4 }, () => Math.floor(Math.random() * 255)).join('.');
+      } while (generatedIps.has(ip));
+      generatedIps.add(ip);
+      dnsIp.textContent = ip;
+      dnsBox.style.display = 'block';
+      copyMsg.style.display = 'none';
+    });
 
-        // تعیین کلاس رنگ پینگ
-        function getPingClass(ping) {
-            if (ping <= 130) return 'ping-green';
-            if (ping <= 190) return 'ping-yellow';
-            return 'ping-red';
-        }
-
-        // بررسی کشور DNS با ipapi.is
-        async function getDNSCountry(address) {
-            try {
-                const response = await fetch(`https://api.ipapi.is?q=${address}`);
-                const data = await response.json();
-                return data.country || 'نامشخص';
-            } catch (error) {
-                console.error('خطا در بررسی کشور:', error);
-                return 'نامشخص';
-            }
-        }
-
-        // تولید DNS تصادفی
-        async function generateDNS() {
-            try {
-                const region = document.getElementById('regionSelect').value;
-                const ipType = document.getElementById('ipType').value;
-                let dnsAddress;
-
-                if (ipType === 'ipv4') {
-                    const range = ipRanges[region].ipv4[Math.floor(Math.random() * ipRanges[region].ipv4.length)];
-                    dnsAddress = generateRandomIPv4(range);
-                } else {
-                    const prefix = ipRanges[region].ipv6[Math.floor(Math.random() * ipRanges[region].ipv6.length)];
-                    dnsAddress = generateRandomIPv6(prefix);
-                }
-
-                const ping = generateRandomPing();
-                const country = region === 'iran' ? 'ایران' : await getDNSCountry(dnsAddress);
-                addToTable(ipType.toUpperCase(), region === 'iran' ? 'ایران' : region === 'europe' ? 'اروپا' : 'خاورمیانه', dnsAddress, ping, country);
-            } catch (error) {
-                console.error('خطا در تولید DNS:', error);
-                alert('خطایی در تولید DNS رخ داد. لطفاً دوباره تلاش کنید.');
-            }
-        }
-
-        // افزودن به جدول
-        function addToTable(type, region, address, ping, country) {
-            try {
-                const tableBody = document.getElementById('dnsTableBody');
-                const row = document.createElement('tr');
-                const pingClass = getPingClass(ping);
-                row.innerHTML = `
-                    <td>${type}</td>
-                    <td>${region}</td>
-                    <td>${address}<br><span class="ping-text ping-value ${pingClass}">${ping} ms</span></td>
-                    <td>${country}</td>
-                    <td><span class="copy-btn" onclick="copyToClipboard('${address}')">کپی</span></td>
-                `;
-                tableBody.prepend(row);
-            } catch (error) {
-                console.error('خطا در افزودن به جدول:', error);
-            }
-        }
-
-        // کپی به کلیپ‌بورد
-        function copyToClipboard(text) {
-            try {
-                navigator.clipboard.writeText(text).then(() => {
-                    alert('آدرس DNS کپی شد!');
-                });
-            } catch (error) {
-                console.error('خطا در کپی به کلیپ‌بورد:', error);
-                alert('خطا در کپی کردن آدرس DNS.');
-            }
-        }
-
-        // دریافت DNS عمومی از منبع خارجی
-        async function fetchPublicDNS() {
-            try {
-                const response = await fetch('https://public-dns.info/nameservers.txt', {
-                    mode: 'cors',
-                    headers: { 'Accept': 'text/plain' }
-                });
-                if (!response.ok) throw new Error('پاسخ سرور نامعتبر است');
-                const text = await response.text();
-                const dnsList = text.split('\n').filter(line => line && line.includes('.')).slice(0, 3);
-                const allDNS = [...dnsList, ...fallbackDNS.map(dns => dns.address)];
-                for (const dns of allDNS) {
-                    const ping = generateRandomPing();
-                    const dnsInfo = fallbackDNS.find(d => d.address === dns) || { type: 'IPv4', region: 'جهانی', country: 'جهانی' };
-                    const country = dnsInfo.country === 'جهانی' ? await getDNSCountry(dns) : dnsInfo.country;
-                    addToTable(dnsInfo.type, dnsInfo.region, dns, ping, country);
-                }
-            } catch (error) {
-                console.error('خطا در دریافت DNS عمومی:', error);
-                alert('دریافت DNS عمومی ممکن نشد. نمایش DNSهای پیش‌فرض...');
-                fallbackDNS.forEach(dns => {
-                    const ping = generateRandomPing();
-                    addToTable(dns.type, dns.region, dns.address, ping, dns.country);
-                });
-            }
-        }
-
-        // بارگذاری اولیه DNSهای پیش‌فرض
-        window.onload = function() {
-            try {
-                fallbackDNS.forEach(dns => {
-                    const ping = generateRandomPing();
-                    addToTable(dns.type, dns.region, dns.address, ping, dns.country);
-                });
-            } catch (error) {
-                console.error('خطا در بارگذاری اولیه:', error);
-            }
-        };
-    </script>
+    dnsIp.addEventListener('click', () => {
+      navigator.clipboard.writeText(dnsIp.textContent).then(() => {
+        copyMsg.style.display = 'block';
+        setTimeout(() => copyMsg.style.display = 'none', 2000);
+      });
+    });
+  </script>
 </body>
-  </html>
+</html>
