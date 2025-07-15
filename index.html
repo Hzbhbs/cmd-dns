@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CMD DNS Panel</title>
+  <title>پنل گیمینگ وایرگارد و DNS</title>
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -42,7 +42,7 @@
       border-radius: 20px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       text-align: center;
-      width: 90%;
+      width: 95%;
       max-width: 400px;
       animation: slideUp 0.5s ease-out;
     }
@@ -66,7 +66,7 @@
       color: #ccc;
     }
     .login-box button {
-      background: #ffffff;
+      background: #00bcd4;
       padding: 12px 24px;
       border: none;
       border-radius: 10px;
@@ -77,11 +77,11 @@
     }
     .login-box button:hover {
       transform: scale(1.05);
-      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+      box-shadow: 0 4px 15px rgba(0, 255, 255, 0.5);
     }
     .main-panel {
       display: none;
-      width: 90%;
+      width: 95%;
       max-width: 600px;
       margin: 20px auto;
       padding: 20px;
@@ -90,6 +90,17 @@
       border-radius: 20px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       animation: fadeIn 0.5s ease-in;
+    }
+    .dns-panel, .wireguard-panel {
+      display: none;
+      width: 100%;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      margin-bottom: 20px;
+    }
+    .dns-panel.active, .wireguard-panel.active {
+      display: block;
     }
     header {
       text-align: center;
@@ -107,7 +118,7 @@
       color: #ffffff;
       margin-bottom: 15px;
     }
-    select {
+    select, input[type="number"] {
       width: 100%;
       padding: 12px;
       border-radius: 10px;
@@ -119,11 +130,11 @@
       cursor: pointer;
       transition: background 0.3s;
     }
-    select:hover {
+    select:hover, input[type="number"]:hover {
       background: rgba(255, 255, 255, 0.3);
     }
     .btn {
-      background: #ffffff;
+      background: #00bcd4;
       padding: 12px 24px;
       border: none;
       border-radius: 10px;
@@ -136,7 +147,7 @@
     }
     .btn:hover {
       transform: scale(1.05);
-      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+      box-shadow: 0 4px 15px rgba(0, 255, 255, 0.5);
     }
     .dns-box {
       display: none;
@@ -159,8 +170,18 @@
     }
     .copy-message {
       display: none;
-      color: #ffffff;
+      color: #00bcd4;
       margin-top: 8px;
+    }
+    textarea {
+      width: 100%;
+      min-height: 150px;
+      background: #222;
+      color: #fff;
+      font-family: monospace;
+      border-radius: 10px;
+      padding: 10px;
+      resize: none;
     }
     .support-btn {
       display: flex;
@@ -184,7 +205,13 @@
     }
     .support-btn:hover {
       transform: scale(1.05);
-      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+      box-shadow: 0 4px 15px rgba(0, 255, 255, 0.5);
+    }
+    .note {
+      font-size: 14px;
+      color: #ccc;
+      margin-top: 20px;
+      text-align: center;
     }
     @keyframes fadeIn {
       from { opacity: 0; }
@@ -199,56 +226,100 @@
 <body>
   <div class="login-screen" id="loginScreen">
     <div class="login-box">
-      <h2>ورود</h2>
-      <input type="text" id="usernameInput" placeholder="نام کاربری" />
-      <input type="password" id="passwordInput" placeholder="رمز عبور" />
+      <h2>ورود به پنل گیمینگ</h2>
+      <input type="text" id="usernameInput" placeholder="نام کاربری" aria-label="نام کاربری" />
+      <input type="password" id="passwordInput" placeholder="رمز عبور" aria-label="رمز عبور" />
       <button onclick="checkLogin()">ورود</button>
     </div>
   </div>
 
   <div class="main-panel" id="mainPanel">
     <header>
-      <h1>CMD DNS PANEL</h1>
+      <h1>پنل گیمینگ وایرگارد و DNS</h1>
     </header>
-    <div class="section">
-      <div class="section-title">انتخاب هاست</div>
-      <select id="hostSelect">
-        <option value="" disabled selected>هاست را انتخاب کنید</option>
-        <option value="jeddah-gaming-05.sa">Jeddah</option>
-        <option value="saudi-gameserver-02.sa">Saudi</option>
-      </select>
-    </div>
-    <div class="section">
-      <div class="section-title">تولید DNS</div>
-      <button class="btn" id="generateDns" disabled>تولید DNS</button>
-      <div class="dns-box" id="dnsResult">
-        <p>DNS: <span id="selectedHostName"></span></p>
-        <div class="dns-ip" id="dnsIp"></div>
-        <div class="copy-message" id="copyMessage">کپی شد!</div>
+    <button class="btn" onclick="showDnsPanel()">پنل تولید DNS</button>
+    <button class="btn" onclick="showWireguardPanel()">پنل تولید وایرگارد</button>
+
+    <div class="dns-panel active" id="dnsPanel">
+      <div class="section">
+        <div class="section-title">انتخاب هاست</div>
+        <select id="hostSelect" aria-label="انتخاب هاست">
+          <option value="" disabled selected>هاست را انتخاب کنید</option>
+          <option value="jeddah-gaming-05.sa">Jeddah</option>
+          <option value="saudi-gameserver-02.sa">Saudi</option>
+        </select>
+      </div>
+      <div class="section">
+        <div class="section-title">تولید DNS</div>
+        <button class="btn" id="generateDns" disabled>تولید DNS</button>
+        <div class="dns-box" id="dnsResult">
+          <p>DNS: <span id="selectedHostName"></span></p>
+          <div class="dns-ip" id="dnsIp" onclick="copyDNS()"></div>
+          <div class="copy-message" id="copyMessage">کپی شد!</div>
+        </div>
       </div>
     </div>
-    <a href="https://t.me/cnn399" class="support-btn">
-      <img src="https://i.ibb.co/4RQjnVqf/New-Project-25-91-E6-BC0.png" alt="Telegram">
+
+    <div class="wireguard-panel" id="wireguardPanel">
+      <div class="section">
+        <div class="section-title">انتخاب کشور</div>
+        <select id="countrySelect" aria-label="انتخاب کشور">
+          <option value="" disabled selected>کشور را انتخاب کنید</option>
+          <option value="2a00">فرانسه 🇫🇷</option>
+          <option value="2a01">آلمان 🇩🇪</option>
+          <option value="2a02">انگلستان 🇬🇧</option>
+        </select>
+      </div>
+      <div class="section">
+        <div class="section-title">تعداد DNS</div>
+        <input type="number" id="dnsCount" placeholder="تعداد DNS (10-100)" min="10" max="100" aria-label="تعداد DNS" />
+      </div>
+      <div class="section">
+        <div class="section-title">تولید کانفیگ وایرگارد</div>
+        <button class="btn" onclick="generateConfig()">تولید کانفیگ</button>
+        <textarea id="configOutput" readonly aria-label="خروجی کانفیگ وایرگارد"></textarea>
+        <button class="btn" onclick="downloadConfig()">دانلود کانفیگ</button>
+      </div>
+      <div class="note">
+        توجه: این کانفیگ‌ها از IPv6 پشتیبانی می‌کنند و برای گیمینگ بهینه شده‌اند.
+      </div>
+    </div>
+
+    <a href="https://t.me/cnn399" class="support-btn" aria-label="پشتیبانی تلگرام">
+      <img src="https://i.ibb.co/4RQjnVqf/New-Project-25-91-E6-BC0.png" alt="آیکون تلگرام">
       پشتیبانی
     </a>
   </div>
 
   <script>
-    // اعتبارسنجی لاگین
+    // مدیریت لاگین
     function checkLogin() {
       const username = document.getElementById('usernameInput').value;
       const password = document.getElementById('passwordInput').value;
       if (username === 'cmd_22' && password === 'cmd_11') {
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('mainPanel').style.display = 'block';
+        showDnsPanel(); // نمایش پیش‌فرض پنل DNS
       } else {
         alert('نام کاربری یا رمز عبور اشتباه است');
       }
     }
 
-    // انتخاب هاست و تولید DNS
+    // نمایش پنل DNS
+    function showDnsPanel() {
+      document.getElementById('dnsPanel').classList.add('active');
+      document.getElementById('wireguardPanel').classList.remove('active');
+    }
+
+    // نمایش پنل وایرگارد
+    function showWireguardPanel() {
+      document.getElementById('wireguardPanel').classList.add('active');
+      document.getElementById('dnsPanel').classList.remove('active');
+    }
+
+    // تولید DNS
     const hostSelect = document.getElementById('hostSelect');
-    const generateBtn = document.getElementById('generateDns');
+    const generateDnsBtn = document.getElementById('generateDns');
     const dnsBox = document.getElementById('dnsResult');
     const dnsIp = document.getElementById('dnsIp');
     const copyMsg = document.getElementById('copyMessage');
@@ -257,10 +328,10 @@
     hostSelect.addEventListener('change', () => {
       const selectedHost = hostSelect.value;
       document.getElementById('selectedHostName').textContent = selectedHost;
-      generateBtn.disabled = !selectedHost;
+      generateDnsBtn.disabled = !selectedHost;
     });
 
-    generateBtn.addEventListener('click', () => {
+    generateDnsBtn.addEventListener('click', () => {
       const selectedHost = hostSelect.value;
       if (!selectedHost) return;
       let ip;
@@ -273,12 +344,67 @@
       copyMsg.style.display = 'none';
     });
 
-    dnsIp.addEventListener('click', () => {
+    function copyDNS() {
       navigator.clipboard.writeText(dnsIp.textContent).then(() => {
         copyMsg.style.display = 'block';
         setTimeout(() => copyMsg.style.display = 'none', 2000);
       });
-    });
+    }
+
+    // تولید کانفیگ وایرگارد
+    function generateConfig() {
+      const country = document.getElementById('countrySelect').value;
+      const dnsCount = parseInt(document.getElementById('dnsCount').value);
+      if (!country) {
+        alert('لطفاً یک کشور انتخاب کنید');
+        return;
+      }
+      if (dnsCount < 10 || dnsCount > 100 || isNaN(dnsCount)) {
+        alert('تعداد DNS باید بین 10 تا 100 باشد');
+        return;
+      }
+      const privateKey = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))));
+      const publicKey = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))));
+      const presharedKey = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))));
+      const ipv6 = `${country}:${Array.from(crypto.getRandomValues(new Uint8Array(12)), byte => byte.toString(16).padStart(2, '0')).join('').match(/.{1,4}/g).join(':')}`;
+      const mtu = [1280, 1420, 1500][Math.floor(Math.random() * 3)];
+      const endpoint = `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}:${Math.floor(Math.random() * 65535)}`;
+      let dnsList = ['10.202.10.10', '78.157.42.101'];
+      for (let i = 0; i < dnsCount; i++) {
+        dnsList.push(`2001:db8::${Math.random().toString(16).slice(2, 10)}`);
+      }
+      const config = `
+[Interface]
+PrivateKey = ${privateKey}
+Address = ${ipv6}/128
+MTU = ${mtu}
+DNS = ${dnsList.join(', ')}
+
+[Peer]
+PublicKey = ${publicKey}
+PresharedKey = ${presharedKey}
+AllowedIPs = ::/0
+Endpoint = ${endpoint}
+PersistentKeepalive = 25
+      `;
+      document.getElementById('configOutput').value = config;
+    }
+
+    // دانلود کانفیگ
+    function downloadConfig() {
+      const config = document.getElementById('configOutput').value;
+      if (!config) {
+        alert('ابتدا کانفیگ تولید کنید!');
+        return;
+      }
+      const blob = new Blob([config], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'SOLRPUBG.conf';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
   </script>
 </body>
 </html>
